@@ -1,0 +1,67 @@
+from collections.abc import Iterable
+
+class SequenceIterator:
+    def __init__(self, sequence):
+        if isinstance(sequence, Iterable):
+            self.sequence = sequence
+        else:
+            self.sequence = list()
+
+    def __iter__(self):
+        self._index = 0
+        return self
+
+    def __next__(self):
+        if self._index < len(self.sequence):
+            element = self.sequence[self._index]
+            self._index += 1
+            return element
+        else:
+            raise StopIteration()
+
+class EvenNumberIterator:
+    def __init__(self, limit=100):
+        self.value = 0
+        self.limit = limit
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.value <= self.limit:
+            self.value += 2
+            return self.value - 2
+        else:
+            raise StopIteration()
+
+class FibonacciIterator:
+    def __init__(self, limit):
+        self.limit = limit
+        self.a, self.b = 0, 1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        next_value = self.a
+        if next_value >= self.limit:
+            raise StopIteration
+        self.a, self.b = self.b, self.a + self.b
+        return next_value
+
+def sum_of_even_fibonacci(limit):
+    fibonacci = FibonacciIterator(limit)
+    return sum(x for x in fibonacci if x % 2 == 0)
+
+if __name__ == "__main__":
+    print("Elements of SequenceIterator:")
+    for element in SequenceIterator([1, 2, 3]):
+        print(element)
+
+    print("\nEven numbers up to 20 using EvenNumberIterator:")
+    for element in EvenNumberIterator(20):
+        print(element)
+
+    limit = 4000000
+    result = sum_of_even_fibonacci(limit)
+    print(f"\nThe sum of all even Fibonacci numbers less than {limit} is {result}")
